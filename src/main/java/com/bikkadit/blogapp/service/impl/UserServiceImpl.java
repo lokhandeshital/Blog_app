@@ -5,11 +5,15 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bikkadit.blogapp.exception.ResourceNotFoundException;
+import com.bikkadit.blogapp.helper.AppConstant;
+import com.bikkadit.blogapp.model.Role;
 import com.bikkadit.blogapp.model.User;
 import com.bikkadit.blogapp.payload.UserDto;
+import com.bikkadit.blogapp.repository.RoleRepository;
 import com.bikkadit.blogapp.repository.UserRepository;
 import com.bikkadit.blogapp.service.UserService;
 
@@ -24,6 +28,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RoleRepository roleRepo;
 
 	/**
 	 * @author Shital
@@ -114,6 +124,31 @@ public class UserServiceImpl implements UserService {
 		log.info("Completed request for delete user details with userId:{}", userId);
 		userRepository.delete(user);
 
+	}
+
+	/**
+	 * @implNote This impl used to create new User
+	 */
+	@Override
+	public UserDto registerNewUser(UserDto userdto) {
+
+		log.info("Initiated request for save the new user details");
+		User user = this.mapper.map(userdto, User.class);
+
+		// Encoded the password
+		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+
+		// set the roles
+		Role role = this.roleRepo.findById(AppConstant.NORMAL_ROLE).get();
+
+		user.getRoles().add(role);
+
+		User newUser = this.userRepository.save(user);
+
+		log.info("Completed request for save the new user details");
+		UserDto registerUser = this.mapper.map(newUser, UserDto.class);
+
+		return registerUser;
 	}
 
 }

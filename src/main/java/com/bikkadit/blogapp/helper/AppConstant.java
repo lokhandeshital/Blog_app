@@ -20,4 +20,8 @@ public class AppConstant {
 
 	public static final String COMMENT_DELETE = "Comment Delete Successfully !!";
 
+	public static final Long NORMAL_ROLE = 102L;
+
+	public static final Long ADMIN_ROLE = 101L;
+
 }

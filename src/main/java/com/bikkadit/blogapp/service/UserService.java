@@ -6,18 +6,21 @@ import com.bikkadit.blogapp.payload.UserDto;
 
 public interface UserService {
 
+	// For Creating new User
+	public UserDto registerNewUser(UserDto userdto);
+
 	// Create User
 	public UserDto createUser(UserDto userdto);
 
-	//Update User
+	// Update User
 	public UserDto updateUser(UserDto userdto, Long userId);
 
-	//Get User By Id
+	// Get User By Id
 	public UserDto getUserById(Long userId);
 
-	//Get All User
+	// Get All User
 	public List<UserDto> getAllUser();
 
-	//Delete User
+	// Delete User
 	public void deleteUser(Long userId);
 }
